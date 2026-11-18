@@ -14,6 +14,12 @@ New-Item -ItemType Directory -Force $payload,$dist | Out-Null
 & dotnet publish (Join-Path $projectRoot 'LegionThermals.csproj') -c Release -r win-x64 --self-contained true -p:DebugType=None -p:DebugSymbols=false "-p:Version=$Version" -o $payload --nologo
 if ($LASTEXITCODE -ne 0) { throw 'dotnet publish failed' }
 
+# Native NuGet packages include large developer symbol files even with DebugType=None.
+# Symbols are not runtime dependencies; remove only PDBs inside the verified payload.
+Get-ChildItem -LiteralPath $payload -Filter '*.pdb' -Recurse -File | ForEach-Object {
+    Remove-Item -LiteralPath $_.FullName -Force
+}
+
 # Licenses from the exact packages named by the published runtime dependency graph.
 $nugetRoot = if ($env:NUGET_PACKAGES) { $env:NUGET_PACKAGES } else { Join-Path ([Environment]::GetFolderPath('UserProfile')) '.nuget/packages' }
 $licenses = Join-Path $payload 'Licenses'
