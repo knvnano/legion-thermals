@@ -1,0 +1,29 @@
+LEGION THERMALS — INSTALLATION AND QUICK START
+
+Windows10/11 x64. The installer includes.NET10 Desktop Runtime.
+
+1. Close the previous version through its tray menu → Exit, then install.
+2. A normal launch requests administrator access immediately through Windows UAC.
+3. Use the language button at the top of Settings to switch Русский / English.
+4. Enable elevated startup in Settings to create a Windows Task Scheduler task.
+   It starts the app10seconds after sign-in with highest privileges, using your
+   interactive token and no stored password. No repeated UAC prompt at sign-in.
+5. Edit the temperature/speed table and enable the temperature scheduler.
+   It uses max(CPU,GPU), polls every2seconds and accepts30–100% in10% steps.
+   Cooling down has a3°C hysteresis. CPU≥90°C or GPU≥80°C forces maximum cooling.
+6. Manual/table percentages are a MINIMUM curve floor, not a maximum RPM cap.
+   Measured RPM and firmware target minimum are displayed separately.
+
+Use Lenovo Auto or Exit to restore the original curve, mode and full-speed flag.
+Forced termination defers journal recovery until the next administrator launch.
+Settings and language are saved automatically in your local user profile.
+Drag the banner to move it; change opacity and visibility in Settings.
+
+Fan writes are enabled only for Lenovo83DF / N0CN BIOS. Other models can differ.
+The app does not include a hardware driver or third-party sensor library.
+Source and releases: https://github.com/knvnano/legion-thermals
+
+The MIT license permits use, modification and redistribution. Third-party
+licenses remain applicable. The Windows executable is not digitally signed.
+Uninstall preserves personal settings and unrelated files, and removes only
+this copy's startup task for the current user.

@@ -1,0 +1,31 @@
+name: Windows build
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+      - name: Restore
+        run: dotnet restore LegionThermals/LegionThermals.csproj
+      - name: Compile
+        run: dotnet build LegionThermals/LegionThermals.csproj -c Release --no-restore
+      - name: Pure regression tests (no hardware writes)
+        run: dotnet run --project LegionThermals.Tests -c Release
+      - name: Publish Windows x64
+        run: dotnet publish LegionThermals/LegionThermals.csproj -c Release -r win-x64 --self-contained false -o artifacts/windows-x64
+      - uses: actions/upload-artifact@v4
+        with:
+          name: LegionThermals-windows-x64-framework-dependent
+          path: artifacts/windows-x64/
+          retention-days: 14
